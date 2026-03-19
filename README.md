@@ -96,6 +96,12 @@
 - ✅ Filtros por fechas
 - ✅ Autocompletado en formularios
 
+  
+### 🔐 **Seguridad de Sesión**
+- ✅ **Cierre automático por inactividad** después de 10 minutos
+- ✅ Mensaje amigable: "Sesión expirada por inactividad. Por favor, vuelva a iniciar sesión."
+- ✅ Protección contra accesos no autorizados
+- ✅ Registro de última actividad del usuario
 ---
 
 ## 👤 **Gestión de Usuarios**
