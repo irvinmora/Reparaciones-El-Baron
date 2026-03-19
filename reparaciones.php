@@ -107,6 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['agregar_pago'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reparaciones - El Barón</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -350,11 +352,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['agregar_pago'])) {
                             <input type="number" id="monto_pago" name="monto_pago" step="0.01" min="0.01" max="<?php echo $reparacion['saldo_pendiente']; ?>" required class="form-control">
                         </div>
                         
+                        <?php 
+                        $back_url = "?action=lista";
+                        if (isset($_GET['from']) && $_GET['from'] == 'pagos') {
+                            $back_url = "pagos_pendientes.php";
+                        }
+                        ?>
                         <div class="form-group">
                             <button type="submit" name="agregar_pago" class="btn btn-success">
                                 <i class="fas fa-money-bill"></i> Registrar Pago
                             </button>
-                            <a href="?action=lista" class="btn btn-secondary">Cancelar</a>
+                            <a href="<?php echo $back_url; ?>" class="btn btn-secondary">Cancelar</a>
                         </div>
                     </form>
                 </div>
@@ -407,20 +415,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['agregar_pago'])) {
                     </div>
                     
                     <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
+                        <?php 
+                        $back_url = "?action=lista";
+                        if (isset($_GET['from']) && $_GET['from'] == 'pagos') {
+                            $back_url = "pagos_pendientes.php";
+                        }
+                        ?>
                         <?php if ($r['saldo_pendiente'] > 0): ?>
-                            <a href="?action=pago&id=<?php echo $id; ?>" class="btn btn-success">
+                            <a href="?action=pago&id=<?php echo $id; ?>&from=<?= isset($_GET['from']) ? $_GET['from'] : '' ?>" class="btn btn-success">
                                 <i class="fas fa-money-bill-wave"></i> Registrar Pago
                             </a>
                         <?php endif; ?>
                         <button onclick="generarSticker(<?php echo $id; ?>)" class="btn btn-primary">
                             <i class="fas fa-tag"></i> Generar Sticker
                         </button>
-                        <a href="?action=lista" class="btn btn-secondary">Volver a la Lista</a>
+                        <a href="<?php echo $back_url; ?>" class="btn btn-secondary">Volver a la Lista</a>
                     </div>
                 </div>
                 <?php else: ?>
                     <div class="alert alert-error">Reparación no encontrada.</div>
-                    <a href="?action=lista" class="btn btn-secondary">Volver a la Lista</a>
+                    <?php 
+                    $back_url = "?action=lista";
+                    if (isset($_GET['from']) && $_GET['from'] == 'pagos') {
+                        $back_url = "pagos_pendientes.php";
+                    }
+                    ?>
+                    <a href="<?php echo $back_url; ?>" class="btn btn-secondary">Volver a la Lista</a>
                 <?php endif; ?>
                 
             <?php else: ?>

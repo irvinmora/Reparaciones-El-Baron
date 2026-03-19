@@ -1,6 +1,37 @@
 <?php
 require_once 'db.php';
 
+function getConfigEmpresa() {
+    global $conn;
+    // Asegurar que la tabla existe
+    $conn->query("CREATE TABLE IF NOT EXISTS config_empresa (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        nombre VARCHAR(100) NOT NULL,
+        telefono VARCHAR(20) DEFAULT '',
+        direccion TEXT NOT NULL
+    )");
+    
+    // Verificar si la columna ruc existe (para retrocompatibilidad si la tabla se creó antes)
+    $res_col = $conn->query("SHOW COLUMNS FROM config_empresa LIKE 'ruc'");
+    if ($res_col && $res_col->num_rows == 0) {
+        $conn->query("ALTER TABLE config_empresa ADD COLUMN ruc VARCHAR(20) DEFAULT '' AFTER nombre");
+    }
+    
+    $res = $conn->query("SELECT * FROM config_empresa LIMIT 1");
+    if ($res && $res->num_rows > 0) {
+        return $res->fetch_assoc();
+    } else {
+        // Insertar por defecto
+        $conn->query("INSERT INTO config_empresa (nombre, telefono, direccion, ruc) VALUES ('El Barón', '0987296574', 'Mercado 4 de mayo', '')");
+        return [
+            'nombre' => 'El Barón',
+            'telefono' => '0987296574',
+            'direccion' => 'Mercado 4 de mayo',
+            'ruc' => ''
+        ];
+    }
+}
+
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
@@ -30,6 +61,7 @@ function redirect($url) {
 function generateSticker($data, $tipo = 'reparacion') {
     $fecha = date('d/m/Y H:i');
     $versiculo = VERSICULO_DEFAULT;
+    $empresa = getConfigEmpresa();
     
     $html = '
     <!DOCTYPE html>
@@ -37,6 +69,8 @@ function generateSticker($data, $tipo = 'reparacion') {
     <head>
         <meta charset="UTF-8">
         <title>Comprobante - El Barón</title>
+        <link rel="icon" href="assets/img/logo.png" type="image/png">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <style>
             body {
@@ -133,8 +167,9 @@ function generateSticker($data, $tipo = 'reparacion') {
     // Contenido del sticker
     $html .= '<div class="sticker" id="sticker-content">
                 <div class="header">
-                    <h2>EL BARÓN</h2>
-                    <p style="font-size: 11px; margin: 2px 0;">REPARACIONES Y REPUESTOS</p>
+                    <h2>' . htmlspecialchars($empresa['nombre']) . '</h2>
+                    ' . (!empty($empresa['ruc']) ? '<p style="font-size: 11px; margin: 2px 0;">RUC/CI: ' . htmlspecialchars($empresa['ruc']) . '</p>' : '') . '
+                    <p style="font-size: 11px; margin: 2px 0;">' . htmlspecialchars($empresa['direccion']) . (!empty($empresa['telefono']) ? ' - Tel: ' . htmlspecialchars($empresa['telefono']) : '') . '</p>
                 </div>
                 <div class="content">
                     <p><strong>Fecha:</strong> ' . $fecha . '</p>
@@ -161,7 +196,7 @@ function generateSticker($data, $tipo = 'reparacion') {
                 <div class="footer">
                     <p class="gracias">¡Gracias por preferirnos!</p>
                     <p class="versiculo">' . $versiculo . '</p>
-                    <p style="font-size: 9px; color: #999;">Generado por Sistema El Barón</p>
+                    <p style="font-size: 9px; color: #999;">Generado por: ' . (isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Sistema El Barón') . '</p>
                 </div>
             </div>';
     

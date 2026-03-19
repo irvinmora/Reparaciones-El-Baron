@@ -35,6 +35,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="usuarios.php" class="<?php echo $current_page == 'usuarios.php' ? 'active' : ''; ?>">
             <i class="fas fa-users-cog"></i> Usuarios
         </a>
+        <a href="configempresa.php" class="<?php echo $current_page == 'configempresa.php' ? 'active' : ''; ?>">
+            <i class="fas fa-building"></i> Configuración Empresa
+        </a>
         <?php endif; ?>
         <a href="reportes.php?tipo=ganancias" class="<?php echo $current_page == 'reportes.php' ? 'active' : ''; ?>">
             <i class="fas fa-chart-bar"></i> Reportes

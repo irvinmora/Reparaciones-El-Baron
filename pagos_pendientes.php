@@ -25,6 +25,8 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagos Pendientes - El Barón</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -53,6 +55,13 @@ $result = $conn->query($sql);
                 <p style="margin-bottom: 20px; color: var(--text-light);">
                     Aquí se muestran todas las reparaciones que aún no han sido canceladas en su totalidad.
                 </p>
+                
+                <div class="search-box" style="margin-bottom: 20px; display: flex; gap: 10px;">
+                    <input type="text" id="buscar-pago" placeholder="Buscar por cliente, teléfono o producto..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" onkeyup="buscarPagos()">
+                    <button onclick="buscarPagos()" class="btn btn-primary" style="padding: 10px 20px;">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
                 
                 <table class="data-table">
                     <thead>
@@ -86,10 +95,10 @@ $result = $conn->query($sql);
                                     $<?php echo number_format($row['saldo_pendiente'], 2); ?>
                                 </td>
                                 <td>
-                                    <a href="reparaciones.php?action=pago&id=<?php echo $row['id']; ?>" class="btn-small btn-success" title="Registrar Abono">
+                                    <a href="reparaciones.php?action=pago&id=<?php echo $row['id']; ?>&from=pagos" class="btn-small btn-success" title="Registrar Abono">
                                         <i class="fas fa-money-bill-wave"></i> Pagar
                                     </a>
-                                    <a href="reparaciones.php?action=ver&id=<?php echo $row['id']; ?>" class="btn-small" title="Ver Detalles">
+                                    <a href="reparaciones.php?action=ver&id=<?php echo $row['id']; ?>&from=pagos" class="btn-small" title="Ver Detalles">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
@@ -104,5 +113,24 @@ $result = $conn->query($sql);
     
     <div class="sidebar-overlay"></div>
     <script src="assets/js/main.js"></script>
+    <script>
+    function buscarPagos() {
+        const termino = document.getElementById('buscar-pago').value.toLowerCase();
+        const filas = document.querySelectorAll('.data-table tbody tr');
+        
+        filas.forEach(fila => {
+            // Ignorar la fila de "No hay pagos" si existe
+            if (fila.children.length === 1 && fila.textContent.includes('No hay pagos pendientes')) {
+                return;
+            }
+            const texto = fila.textContent.toLowerCase();
+            if (texto.includes(termino)) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+    </script>
 </body>
 </html>

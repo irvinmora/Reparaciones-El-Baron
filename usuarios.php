@@ -92,6 +92,8 @@ if (isset($_GET['delete'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios - El Barón</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -126,7 +128,7 @@ if (isset($_GET['delete'])) {
             <?php if ($action == 'nuevo'): ?>
                 <div class="form-container">
                     <h2>Registrar Nuevo Usuario</h2>
-                    <form method="POST" action="">
+                    <form method="POST" action="" autocomplete="off">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nombre">Nombre Completo *</label>
@@ -134,14 +136,14 @@ if (isset($_GET['delete'])) {
                             </div>
                             <div class="form-group">
                                 <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com">
+                                <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com" autocomplete="new-email">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="password">Contraseña *</label>
                                 <div class="password-field">
-                                    <input type="password" id="password" name="password" required minlength="6">
+                                    <input type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
                                     <span class="toggle-password" title="Mostrar/Ocultar"><i class="fas fa-eye"></i></span>
                                 </div>
                             </div>
