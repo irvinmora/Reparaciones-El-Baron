@@ -1,0 +1,15 @@
+{
+    "name": "el-baron/reparaciones",
+    "description": "Sistema de gestión para taller de reparaciones",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "google/apiclient": "^2.12.1",
+        "guzzlehttp/guzzle": "^7.0",
+        "google/auth": "^1.28"
+    },
+    "config": {
+        "platform-check": false,
+        "optimize-autoloader": true
+    }
+}
